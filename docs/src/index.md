@@ -1,4 +1,4 @@
-# MyJuliaPkg
+# MyJuliaPkg.jl
 
 Documentation for MyJuliaPkg
 
@@ -7,7 +7,7 @@ A set of sparse julia functions for personal use.
 ## Installation
 
 ```julia
-Pkg.add(url="https://github.com/stefanocovino/MyJuliaPkg.git")
+Pkg.add(url="https://github.com/stefanocovino/MyJuliaPkg.jl.git")
 ```
 
 will install this package.

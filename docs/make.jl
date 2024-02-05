@@ -2,9 +2,11 @@ using Documenter
 using MyJuliaPkg
 using Documenter.Remotes
 
+
 makedocs(
-    sitename = "MyJuliaPkg",
-    format = Documenter.HTML(),
+    sitename = "MyJuliaPkg.jl",
+    format = Documenter.HTML(prettyurls = false),
+    repo = Remotes.GitHub("stefanocovino/MyJuliaPkg.jl"),
     #modules = [MyJuliaPkg]
 )
 
@@ -12,6 +14,6 @@ makedocs(
 # See "Hosting Documentation" and deploydocs() in the Documenter manual
 # for more information.
 #deploydocs(
-#    repo = "github.com/stefanocovino/MyJuliaPkg.git",
+#    repo = "github.com/stefanocovino/MyJuliaPkg.jl.git",
 #    versions = nothing
 #)
