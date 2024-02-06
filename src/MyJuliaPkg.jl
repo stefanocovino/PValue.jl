@@ -37,7 +37,7 @@ end
 
     Frequentist_p_value(ssrv,ndata,nvar)
     
-Compute the 'classic' frequentist [p-value]{https://en.wikipedia.org/wiki/P-value}.
+Compute the 'classic' frequentist [p-value](https://en.wikipedia.org/wiki/P-value).
 'ssrv' is the SSR, the sum of squared residuals, 'ndata' the number of datapoints and 'nvar' the number of 
 fit parameters.
 

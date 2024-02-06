@@ -24,6 +24,11 @@ BIC(lp::AbstractFloat,ndata::Integer,nvar::Integer)
 ```
 
 ```@docs
+Frequentist_p_value(ssrv,ndata,nvar)
+```
+
+
+```@docs
 RMS(datavec,modvec)
 ```
 
