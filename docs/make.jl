@@ -5,15 +5,16 @@ using Documenter.Remotes
 
 makedocs(
     sitename = "MyJuliaPkg.jl",
-    format = Documenter.HTML(prettyurls = false),
-    repo = Remotes.GitHub("stefanocovino/MyJuliaPkg.jl"),
+    #root = ".",
+    #format = Documenter.HTML(prettyurls = false),
+    format = Documenter.HTML(),
+    #repo = Remotes.GitHub("stefanocovino/MyJuliaPkg.jl"),
     #modules = [MyJuliaPkg]
 )
 
 # Documenter can also automatically deploy documentation to gh-pages.
 # See "Hosting Documentation" and deploydocs() in the Documenter manual
 # for more information.
-#deploydocs(
-#    repo = "github.com/stefanocovino/MyJuliaPkg.jl.git",
-#    versions = nothing
-#)
+deploydocs(
+    repo = "github.com/stefanocovino/MyJuliaPkg.jl.git",
+)
