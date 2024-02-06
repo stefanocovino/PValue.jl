@@ -1,10 +1,12 @@
 name = "MyJuliaPkg"
 uuid = "4aad55e6-3783-49d8-8c0b-540e9d18c8e0"
 authors = ["stefanocovino <stefano.covino@inaf.it> and contributors"]
-version = "0.2.2"
+version = "0.3.0"
 
 [deps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
 julia = "1"

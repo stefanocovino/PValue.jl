@@ -1,7 +1,11 @@
 module MyJuliaPkg
 
 
+using Distributions
+
+
 export BIC
+export Frequentist_p_value
 export RMS
 export SSR
 
@@ -26,6 +30,32 @@ BIC(56.,100,3)
 function BIC(lp::AbstractFloat,ndata::Integer,nvar::Integer)
     return -2*lp + nvar*log(ndata)
 end
+
+
+
+"""
+
+    Frequentist_p_value(ssrv,ndata,nvar)
+    
+Compute the 'classic' frequentist [p-value]{https://en.wikipedia.org/wiki/P-value}.
+'ssrv' is the SSR, the sum of squared residuals, 'ndata' the number of datapoints and 'nvar' the number of 
+fit parameters.
+
+# Examples
+```jldoctest
+Frquentist_p_value(85.3,100,10)
+
+# output
+
+0.620453567577112
+```
+"""
+function Frequentist_p_value(ssrv,ndata,nvar)
+    cs = Chisq(ndata-nvar)
+    return ccdf(cs,ssrv)
+end
+
+
 
 
 
@@ -72,6 +102,8 @@ SSR([1.,2.,3.,4.],[1.1,1.9,3.05,3.8],[0.1,0.05,0.2,0.1])
 function SSR(modvec,obsvec,errobsvec)
     sum(((modvec.-obsvec)./errobsvec).^2)
 end
+
+
 
 
 end
