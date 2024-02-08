@@ -36,14 +36,24 @@ end
 """
 
     Frequentist_p_value(ssrv,ndata,nvar)
+    Frequentist_p_value(ssrv,ndof)
+    
     
 Compute the 'classic' frequentist [p-value](https://en.wikipedia.org/wiki/P-value).
 'ssrv' is the SSR, the sum of squared residuals, 'ndata' the number of datapoints and 'nvar' the number of 
-fit parameters.
+fit parameters. Else, 'ndof' is the number of [degrees of freedom](https://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics)) 
+(i.e. ndata-nvar).
 
 # Examples
 ```jldoctest
-Frquentist_p_value(85.3,100,10)
+Frequentist_p_value(85.3,100,10)
+
+# output
+
+0.620453567577112
+```
+```jldoctest
+Frequentist_p_value(85.3,90)
 
 # output
 
@@ -52,6 +62,10 @@ Frquentist_p_value(85.3,100,10)
 """
 function Frequentist_p_value(ssrv,ndata,nvar)
     cs = Chisq(ndata-nvar)
+    return ccdf(cs,ssrv)
+end
+function Frequentist_p_value(ssrv,ndof)
+    cs = Chisq(ndof)
     return ccdf(cs,ssrv)
 end
 

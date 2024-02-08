@@ -1,7 +1,7 @@
 name = "MyJuliaPkg"
 uuid = "4aad55e6-3783-49d8-8c0b-540e9d18c8e0"
 authors = ["stefanocovino <stefano.covino@inaf.it> and contributors"]
-version = "0.3.0"
+version = "0.3.2"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
