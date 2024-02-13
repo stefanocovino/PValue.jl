@@ -103,7 +103,7 @@ for i in 1:nrow(ch)
     push!(res,f(x;a=ch[i,:a],b=ch[i,:b]))
 end
 
-Lucy_Bayesian_p_value(res,length(x),2)
+Lucy_Bayesian_p_value(res,y,ey,2)
 
 # output
 
