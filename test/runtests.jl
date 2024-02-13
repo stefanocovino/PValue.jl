@@ -19,7 +19,7 @@ using Test
     for i in 1:nrow(ch)
         push!(res,f(x;a=ch[i,:a],b=ch[i,:b]))
     end
-    @test Lucy_Bayesian_p_value(res,length(x),2) == 0.7200318895143041
+    @test Lucy_Bayesian_p_value(res,y,ey,2) == 0.7200318895143041
     #
     # RMS
     @test RMS([1.1,2.2],[1.15,2.15]) == 0.050000000000000044
