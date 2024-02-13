@@ -113,7 +113,7 @@ Lucy_Bayesian_p_value(res,y,ey,2)
 function Lucy_Bayesian_p_value(modvecs,obsvec,errobsvec,nvars)
     resvec = []
     for i in 1:length(modvecs)
-        push!(resvec,SSR(modvecs,obsvec,errobsvec))
+        push!(resvec,SSR(modvecs[i],obsvec,errobsvec))
     end
     meanres = mean(resvec)-nvars
     cs = Chisq(length(obsvec)-nvars)
