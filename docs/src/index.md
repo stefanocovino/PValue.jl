@@ -29,6 +29,11 @@ Frequentist_p_value(ssrv,ndata,nvar)
 
 
 ```@docs
+Lucy_Bayesian_p_value(modvecs,obsvec,errobsvec,nvars)
+```
+
+
+```@docs
 RMS(datavec,modvec)
 ```
 

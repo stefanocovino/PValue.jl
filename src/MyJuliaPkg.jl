@@ -1,11 +1,14 @@
 module MyJuliaPkg
 
 
+using DataFrames
 using Distributions
+using Statistics
 
 
 export BIC
 export Frequentist_p_value
+export Lucy_Bayesian_p_value
 export RMS
 export SSR
 
@@ -69,6 +72,53 @@ function Frequentist_p_value(ssrv,ndof)
     return ccdf(cs,ssrv)
 end
 
+
+
+
+"""
+
+    Lucy_Bayesian_p_value(modvecs,obsvec,errobsvec,nvars)
+
+    
+Compute a 'Bayesian [p-value](https://en.wikipedia.org/wiki/P-value)' following the recipe by [L.B. Lucy, 2016, A&A 588, 19](https://ui.adsabs.harvard.edu/abs/2016A%26A...588A..19L/abstract).
+
+### Explanation
+
+'obsvec' and 'errobsvec' are length-'m' vectors of datapoints and relative uncertainties. 'modvecs' is a vector computed by the posterior distribution of parameters ('n' chains), e.g. by a MCMC, where each component is a vector of 'm' values computed using the fit function and each set of parmeters from the posterior distribution. Finally, 'nvars' is the number of parameters.
+
+
+# Examples
+```jldoctest
+x = [1,2,3,4,5]
+y = [1.01,1.95,3.05,3.97,5.1]
+ey = [0.05,0.1,0.11,0.17,0.2]
+
+f(x;a=1.,b=0.) = a.*x.+b
+
+# Sample from a fake posterior distribution
+ch = DataFrame(a=[0.99,0.95,1.01,1.02,1.03], b=[0.,-0.01,0.01,0.02,-0.01])
+
+res = []
+for i in 1:nrow(ch)
+    push!(res,f(x;a=ch[i,:a],b=ch[i,:b]))
+end
+
+Lucy_Bayesian_p_value(res,length(x),2)
+
+# output
+
+0.7200318895143041
+```
+"""
+function Lucy_Bayesian_p_value(modvecs,obsvec,errobsvec,nvars)
+    resvec = []
+    for i in 1:length(modvecs)
+        push!(resvec,SSR(modvecs,obsvec,errobsvec))
+    end
+    meanres = mean(resvec)-nvars
+    cs = Chisq(length(obsvec)-nvars)
+    return ccdf(cs,meanres)
+end
 
 
 
