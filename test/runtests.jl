@@ -1,4 +1,5 @@
 using DataFrames
+using Distributions
 using MyJuliaPkg
 using Test
 
