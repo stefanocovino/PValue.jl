@@ -137,7 +137,7 @@ function Gelman_Bayesian_p_value(modvecs,simvecs,obsvec,errobsvec)
             ni += 1
         end
     end
-    return ni/lenght(finvec)
+    return ni/length(finvec)
 end
 
 
