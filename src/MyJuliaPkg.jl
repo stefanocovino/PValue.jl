@@ -8,6 +8,7 @@ using Statistics
 
 export BIC
 export Frequentist_p_value
+export Gelman_Bayesian_p_value
 export Lucy_Bayesian_p_value
 export RMS
 export SSR
@@ -71,6 +72,76 @@ function Frequentist_p_value(ssrv,ndof)
     cs = Chisq(ndof)
     return ccdf(cs,ssrv)
 end
+
+
+
+
+"""
+
+    Gelman_Bayesian_p_value(modvecs,simvecs,obsvec,errobsvec)
+
+    
+Compute a 'Bayesian [p-value](https://en.wikipedia.org/wiki/P-value)' following the recipe by [A. Gelman et al., 2013](http://www.stat.columbia.edu/~gelman/book/).
+
+### Explanation
+
+'obsvec' and 'errobsvec' are length-'m' vectors of datapoints and relative uncertainties. 'modvecs' is a vector computed by the posterior distribution of parameters ('n' chains), e.g. by a MCMC, where each component is a vector of 'm' values computed using the fit function and each set of parmeters from the posterior distribution. Finally, 'simvecs' is like 'modevecs' with the addition of the predicted noise, i.e. these are simulated datapoints.
+
+
+# Examples
+```jldoctest
+x = [1,2,3,4,5]
+y = [1.01,1.95,3.05,3.97,5.1]
+ey = [0.05,0.1,0.11,0.17,0.2]
+
+f(x;a=1.,b=0.) = a.*x.+b
+
+# Sample from a fake posterior distribution
+ch = DataFrame(a=[0.99,0.95,1.01,1.02,1.03], b=[0.,-0.01,0.01,0.02,-0.01])
+
+res = []
+for i in 1:nrow(ch)
+    push!(res,f(x;a=ch[i,:a],b=ch[i,:b]))
+end
+
+sim = []
+for i in 1:length(res)
+    rsim = []
+    for j in 1:length(res[i])
+        push!(rsim,res[i][j]+rand(Normal(0,ey[j]),1)[1])
+    end
+    push!(sim,rsim)
+end
+
+Gelman_Bayesian_p_value(res,sim,y,ey)
+
+# output
+
+0.6
+```
+"""
+function Gelman_Bayesian_p_value(modvecs,simvecs,obsvec,errobsvec)
+    resvec = []
+    for i in 1:length(modvecs)
+        push!(resvec,SSR(modvecs[i],obsvec,errobsvec))
+    end
+    simvec = []
+    for i in 1:length(simvecs)
+        push!(simvec,SSR(modvecs[i],simvecs[i],errobsvec))
+    end
+    #
+    finvec = simvec .> resvec
+    ni = 0
+    for i in 1:length(finvec)
+        if finvec[i]
+            ni += 1
+        end
+    end
+    return ni/lenght(finvec)
+end
+
+
+
 
 
 
