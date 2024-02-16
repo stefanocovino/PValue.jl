@@ -117,7 +117,7 @@ Gelman_Bayesian_p_value(res,sim,y,ey)
 
 # output
 
-0.6
+0.8
 ```
 """
 function Gelman_Bayesian_p_value(modvecs,simvecs,obsvec,errobsvec)

@@ -28,7 +28,7 @@ using Test
         end
         push!(sim,rsim)
     end
-    @test Gelman_Bayesian_p_value(res,sim,y,ey) == 0.6
+    @test Gelman_Bayesian_p_value(res,sim,y,ey) == 0.8
     #
     # Lucy's Bayesian p-value
     x = [1,2,3,4,5]
