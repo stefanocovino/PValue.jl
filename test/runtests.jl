@@ -15,7 +15,7 @@ using Test
     y = [1.01,1.95,3.05,3.97,5.1]
     ey = [0.05,0.1,0.11,0.17,0.2]
     f(x;a=1.,b=0.) = a.*x.+b
-    ch = DataFrame(a=rand(Normal(1,0.1),1000), b=rand(Normal(0.,0.1),1000)))
+    ch = DataFrame(a=rand(Normal(1,0.1),1000), b=rand(Normal(0.,0.1),1000))
     res = []
     for i in 1:nrow(ch)
         push!(res,f(x;a=ch[i,:a],b=ch[i,:b]))
