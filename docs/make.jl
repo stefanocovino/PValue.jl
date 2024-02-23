@@ -8,8 +8,8 @@ makedocs(
     #format = Documenter.HTML(prettyurls = false),
     #format = Documenter.HTML(prettyurls = get(ENV, "CI", nothing) == "true")
     format = Documenter.HTML(),
-    pages=["Home" => "index.md",],
-    modules = [MyJuliaPkg],
+    #pages=["Home" => "index.md",],
+    #modules = [MyJuliaPkg],
     authors="Stefano Covino",
 )
 

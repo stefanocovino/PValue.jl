@@ -19,7 +19,7 @@ export SSR
     BIC(lp::AbstractFloat,ndata::Integer,nvar::Integer)
 
 Computes the [Bayes Information Criterion](https://en.wikipedia.org/wiki/Bayesian_information_criterion).
-'lp' is the logarithm of the likelihood, 'ndata' the number of datapoints and 'nvar' the number of model parameters. 
+'lp' is the logarithm of the likelihood, 'ndata' the number of datapoints and 'nvar' the number of model parameters.
 
 
 # Examples
@@ -44,8 +44,8 @@ end
     
     
 Compute the 'classic' frequentist [p-value](https://en.wikipedia.org/wiki/P-value).
-'ssrv' is the SSR, the sum of squared residuals, 'ndata' the number of datapoints and 'nvar' the number of 
-fit parameters. Else, 'ndof' is the number of [degrees of freedom](https://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics)) 
+'ssrv' is the SSR, the sum of squared residuals, 'ndata' the number of datapoints and 'nvar' the number of
+fit parameters. Else, 'ndof' is the number of [degrees of freedom](https://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics))
 (i.e. ndata-nvar).
 
 # Examples
@@ -135,7 +135,7 @@ Compute a 'Bayesian [p-value](https://en.wikipedia.org/wiki/P-value)' following 
 
 'obsvec' and 'errobsvec' are length-'m' vectors of datapoints and relative uncertainties. 'modvecs' is a vector computed by the posterior distribution of parameters ('n' chains), e.g. by a MCMC, where each component is a vector of 'm' values computed using the fit function and each set of parmeters from the posterior distribution. Finally, 'nvars' is the number of parameters.
 
-This algorithm relies on the $\chi^2$ distribution as in the 'frequentist' case. Howver the SSR is not based only on a punt estimate but it is computed by the whole posterior distribution of parameters.
+This algorithm relies on the Chi2 distribution as in the 'frequentist' case. Howver the SSR is not based only on a punt estimate but it is computed by the whole posterior distribution of parameters.
 
 
 # Examples
@@ -202,7 +202,7 @@ end
     SSR(modvec,obsvec,errobsvec)
 
 Computes the [Sum of Squared Residuals](https://en.wikipedia.org/wiki/Residual_sum_of_squares).
-'modvec', 'obsvec' and 'errobsvec' are vectors with the model predictions, observed data and errors, respectively. 
+'modvec', 'obsvec' and 'errobsvec' are vectors with the model predictions, observed data and errors, respectively.
 
 
 # Examples
