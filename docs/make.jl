@@ -1,20 +1,18 @@
 using Documenter
-using MyJuliaPkg
+using p-Value
 using Documenter.Remotes
 
 
 makedocs(
-    sitename = "MyJuliaPkg.jl",
-    #format = Documenter.HTML(prettyurls = false),
-    #format = Documenter.HTML(prettyurls = get(ENV, "CI", nothing) == "true")
-    format = Documenter.HTML(),
+    sitename = "p-Value.jl",
+    format = Documenter.HTML(prettyurls = true),
     #pages=["Home" => "index.md",],
-    #modules = [MyJuliaPkg],
+    #modules = [p-Value],
     authors="Stefano Covino",
 )
 
 # Documenter can also automatically deploy documentation to gh-pages.
 # See "Hosting Documentation" and deploydocs() in the Documenter manual
 # for more information.
-deploydocs(repo = "github.com/stefanocovino/MyJuliaPkg.jl", devbranch = "main")
+deploydocs(repo = "github.com/stefanocovino/p-Value.jl", devbranch = "main", versions = nothing)
 #

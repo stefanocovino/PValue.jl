@@ -1,8 +1,8 @@
-# MyJuliaPkg.jl
+# pValue.jl
 
-Documentation for MyJuliaPkg
+Documentation for pValue.jl
 
-A set of sparse julia functions for personal use.
+A set of sparse julia functions for computing p-values in a "frequentist" or "Bayesian" scenario.
 
 
 

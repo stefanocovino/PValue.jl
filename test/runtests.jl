@@ -1,10 +1,10 @@
 using DataFrames
 using Distributions
-using MyJuliaPkg
+using pValue
 using Random
 using Test
 
-@testset "MyJuliaPkg.jl" begin
+@testset "pValue.jl" begin
     # BIC
     @test BIC(56.,100,3) == -98.18448944203573
     #
