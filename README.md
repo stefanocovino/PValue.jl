@@ -18,4 +18,4 @@ Pkg.add(url="https://github.com/stefanocovino/pValue.jl.git")
 will install this package.
 
 
-[Here](https://stefanocovino.github.io/pValue.jl)'s the documentation!
+[Here](https://stefanocovino.github.io/pValue.jl/stable/)'s the documentation!
