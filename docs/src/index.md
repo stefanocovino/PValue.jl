@@ -38,6 +38,9 @@ RMS(datavec,modvec)
 SSR(modvec,obsvec,errobsvec)
 ```
 
+```@docs
+WeightedArithmeticMean(x,ex)
+```
 
 
 ## Index

@@ -12,6 +12,7 @@ export Gelman_Bayesian_p_value
 export Lucy_Bayesian_p_value
 export RMS
 export SSR
+export WeightedArithmeticMean
 
 
 """
@@ -219,6 +220,33 @@ function SSR(modvec,obsvec,errobsvec)
 end
 
 
+
+"""
+
+    WeightedArithmeticMean(x,ex)
+
+Computes the [Weighted Arithmetic Mean](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean) of the input vector 'x' 
+weitghted by its uncertainties 'ex'.
+
+
+# Examples
+```jldoctest
+x = [1.2,2.2,4.5,3,3.6]
+ex = [0.2,0.2,0.5,0.1,0.6]
+
+WeightedArithmeticMean(x,ex)
+
+# output
+
+(2.634301913536499, 0.07986523020975032)
+```
+"""
+function WeightedArithmeticMean(x,ex)
+    w = 1 ./ ex.^2
+    n = sum( x.* w)
+    d = sum(w)
+    return n/d, sqrt(1/d)
+end
 
 
 end

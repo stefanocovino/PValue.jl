@@ -50,4 +50,9 @@ using Test
     # SSR
     @test SSR([1.,2.,3.,4.],[1.1,1.9,3.05,3.8],[0.1,0.05,0.2,0.1]) == 9.062500000000016
     #
+    # WeightedArithmeticMean
+    wx = [1.2,2.2,4.5,3,3.6]
+    wex = [0.2,0.2,0.5,0.1,0.6]
+    @test WeightedArithmeticMean(wx,wex) == (2.634301913536499, 0.07986523020975032)
+    # 
 end
