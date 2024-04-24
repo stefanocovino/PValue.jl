@@ -2,7 +2,7 @@
 
 julia_version = "1.10.1"
 manifest_format = "2.0"
-project_hash = "3d9c60e6289c7c2c85ca11b0b76cd0b58ae19fd8"
+project_hash = "24521d5f3ed095ecad4a5ec9ffbab18b537f40e8"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -1222,6 +1222,12 @@ git-tree-sha1 = "67186a2bc9a90f9f85ff3cc8277868961fb57cbd"
 uuid = "f57f5aa1-a3ce-4bc8-8ab9-96f992907883"
 version = "0.4.3"
 
+[[deps.PValue]]
+deps = ["DataFrames", "Distributions", "Documenter", "Random", "Statistics", "Test"]
+path = ".."
+uuid = "4aad55e6-3783-49d8-8c0b-540e9d18c8e0"
+version = "0.8.3"
+
 [[deps.Packing]]
 deps = ["GeometryBasics"]
 git-tree-sha1 = "ec3edfe723df33528e085e632414499f26650501"
@@ -2105,12 +2111,6 @@ version = "1.52.0+1"
 deps = ["Artifacts", "Libdl"]
 uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 version = "17.4.0+2"
-
-[[deps.pValue]]
-deps = ["DataFrames", "Distributions", "Documenter", "Random", "Statistics", "Test"]
-path = ".."
-uuid = "4aad55e6-3783-49d8-8c0b-540e9d18c8e0"
-version = "0.7.0"
 
 [[deps.x264_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
