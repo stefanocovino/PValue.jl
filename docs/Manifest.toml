@@ -1226,7 +1226,7 @@ version = "0.4.3"
 deps = ["DataFrames", "Distributions", "Documenter", "Random", "Statistics", "Test"]
 path = ".."
 uuid = "4aad55e6-3783-49d8-8c0b-540e9d18c8e0"
-version = "0.8.3"
+version = "0.8.4"
 
 [[deps.Packing]]
 deps = ["GeometryBasics"]
