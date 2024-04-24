@@ -1,10 +1,10 @@
 using DataFrames
 using Distributions
-using pValue
+using PValue
 using Random
 using Test
 
-@testset "pValue.jl" begin
+@testset "PValue.jl" begin
     # BIC
     @test BIC(56.,100,3) == -98.18448944203573
     #
@@ -54,5 +54,5 @@ using Test
     wx = [1.2,2.2,4.5,3,3.6]
     wex = [0.2,0.2,0.5,0.1,0.6]
     @test WeightedArithmeticMean(wx,wex) == (2.634301913536499, 0.07986523020975032)
-    # 
+    #
 end

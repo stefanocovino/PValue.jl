@@ -1,18 +1,18 @@
 using Documenter
-using pValue
+using PValue
 using Documenter.Remotes
 
 
 makedocs(
-    sitename = "pValue.jl",
+    sitename = "PValue.jl",
     format = Documenter.HTML(prettyurls = true),
     #pages=["Home" => "index.md",],
-    #modules = [p-Value],
+    #modules = [PValue],
     authors="Stefano Covino",
 )
 
 # Documenter can also automatically deploy documentation to gh-pages.
 # See "Hosting Documentation" and deploydocs() in the Documenter manual
 # for more information.
-deploydocs(repo = "github.com/stefanocovino/pValue.jl", devbranch = "main")
+deploydocs(repo = "github.com/stefanocovino/PValue.jl", devbranch = "main")
 #
