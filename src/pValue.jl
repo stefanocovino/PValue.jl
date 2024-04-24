@@ -94,7 +94,7 @@ The routinely essentially compares the SSR (or, in principle, any test statistic
 
 # Examples
 
-A full example of application of the **Gelman_Bayesian_p_value** as well as the **Lucy_Bayesian_p_value** and the **Frequentist_p_value** is reported in this Jupyter [notebook](https://github.com/stefanocovino/pValue.jl/main/docs/BayesianFitTest.ipynb).
+A full example of application of the **Gelman_Bayesian_p_value** as well as the **Lucy_Bayesian_p_value** and the **Frequentist_p_value** is reported in this Jupyter [notebook](https://github.com/stefanocovino/pValue.jl/tree/main/docs/BayesianFitTest.ipynb).
 
 .
 
