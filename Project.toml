@@ -1,7 +1,7 @@
 name = "PValue"
 uuid = "4aad55e6-3783-49d8-8c0b-540e9d18c8e0"
 authors = ["stefanocovino <stefano.covino@inaf.it> and contributors"]
-version = "0.8.4"
+version = "0.8.5"
 
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
