@@ -19,4 +19,4 @@ will install this package.
 
 [Here](https://stefanocovino.github.io/PValue.jl/stable/)'s the documentation!
 
-Some of the package functionalities are also offered by the [HypothesisTests](https://github.com/JuliaStats/HypothesisTests.jl.git).
+Some of the package functionalities are also offered by the [HypothesisTests](https://github.com/JuliaStats/HypothesisTests.jl.git) package.
