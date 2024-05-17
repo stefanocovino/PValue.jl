@@ -19,12 +19,17 @@ export WeightedArithmeticMean
 
     BIC(lp::AbstractFloat,ndata::Integer,nvar::Integer)
 
-Computes the [Bayes Information Criterion](https://en.wikipedia.org/wiki/Bayesian_information_criterion).
-'lp' is the logarithm of the likelihood, 'ndata' the number of datapoints and 'nvar' the number of model parameters.
+Compute the [Bayes Information Criterion](https://en.wikipedia.org/wiki/Bayesian_information_criterion).
+
+# Arguments
+- `lp` logarithm of the likelihood.
+- `ndata` number of datapoints.
+- `nvar` number of model parameters.
 
 
 # Examples
 ```jldoctest
+
 BIC(56.,100,3)
 
 # output
@@ -45,12 +50,19 @@ end
     
     
 Compute the 'classic' frequentist [p-value](https://en.wikipedia.org/wiki/P-value).
-'ssrv' is the SSR, the sum of squared residuals, 'ndata' the number of datapoints and 'nvar' the number of
-fit parameters. Else, 'ndof' is the number of [degrees of freedom](https://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics))
-(i.e. ndata-nvar).
+
+# Arguments
+
+- `ssrv` SSR, the sum of squared residuals.
+- `ndata` number of datapoints.
+- `nvar` number of fit parameters. 
+- `ndof` number of [degrees of freedom](https://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics))
+(i.e. ``ndata-nvar``).
 
 # Examples
+
 ```jldoctest
+
 Frequentist_p_value(85.3,100,10)
 
 # output
@@ -84,19 +96,32 @@ end
     
 Compute a 'Bayesian [p-value](https://en.wikipedia.org/wiki/P-value)' following the recipe by [A. Gelman et al., 2013](http://www.stat.columbia.edu/~gelman/book/).
 
+# Arguments
+
+- `obsvec` datapoints.
+- `errobsvec` datapoint uncertainties.
+- `modvecs` model vector.
+- `simvecs` simulated vector.
 
 ### Explanation
 
-'obsvec' and 'errobsvec' are length-'m' vectors of datapoints and relative uncertainties. 'modvecs' is a vector computed by the posterior distribution of parameters ('n' chains), e.g. by a MCMC, where each component is a vector of 'm' values computed using the fit function and each set of parmeters from the posterior distribution. Finally, 'simvecs' is like 'modevecs' with the addition of the predicted noise, i.e. these are simulated datapoints.
+`obsvec` and `errobsvec` are length-'m' vectors of datapoints and relative uncertainties. 
+`modvecs` is a vector computed by the posterior distribution of parameters (`n` chains), 
+e.g. by a MCMC, where each component is a vector of `m` values computed using the fit function 
+and each set of parmeters from the posterior distribution. Finally, `simvecs` is like `modevecs` 
+with the addition of the predicted noise, i.e. these are simulated datapoints.
 
-The routinely essentially compares the SSR (or, in principle, any test statistics) of each model based on the derived posterior distribution of parameters vs the data and to SSR computed by simulated data and again the posterior.
+The routinely essentially compares the SSR (or, in principle, any test statistics) of 
+each model based on the derived posterior distribution of parameters vs the data and 
+to SSR computed by simulated data and again the posterior.
 
 
 # Examples
 
-A full example of application of the **Gelman_Bayesian_p_value** as well as the **Lucy_Bayesian_p_value** and the **Frequentist_p_value** is reported in this Jupyter [notebook](https://github.com/stefanocovino/PValue.jl/tree/main/docs/BayesianFitTest.ipynb).
+A full example of application of the **Gelman_Bayesian_p_value** as well as the 
+**Lucy_Bayesian_p_value** and the **Frequentist_p_value** is reported in this 
+Jupyter [notebook](https://github.com/stefanocovino/PValue.jl/tree/main/docs/BayesianFitTest.ipynb).
 
-.
 
 """
 function Gelman_Bayesian_p_value(modvecs,simvecs,obsvec,errobsvec)
@@ -123,8 +148,6 @@ end
 
 
 
-
-
 """
 
     Lucy_Bayesian_p_value(modvecs,obsvec,errobsvec,nvars)
@@ -132,15 +155,32 @@ end
     
 Compute a 'Bayesian [p-value](https://en.wikipedia.org/wiki/P-value)' following the recipe by [L.B. Lucy, 2016, A&A 588, 19](https://ui.adsabs.harvard.edu/abs/2016A%26A...588A..19L/abstract).
 
+
+# Arguments
+
+- `obsvec` datapoints.
+- `errobsvec` datapoint uncertainties.
+- `nvars` number of parameters.
+
+
+
 ### Explanation
 
-'obsvec' and 'errobsvec' are length-'m' vectors of datapoints and relative uncertainties. 'modvecs' is a vector computed by the posterior distribution of parameters ('n' chains), e.g. by a MCMC, where each component is a vector of 'm' values computed using the fit function and each set of parmeters from the posterior distribution. Finally, 'nvars' is the number of parameters.
+`obsvec` and `errobsvec` are length-`m` vectors of datapoints and relative uncertainties. 
+`modvecs` is a vector computed by the posterior distribution of parameters (`n` chains), 
+e.g. by a MCMC, where each component is a vector of `m` values computed using the fit 
+function and each set of parmeters from the posterior distribution. Finally, `nvars` is 
+the number of parameters.
 
-This algorithm relies on the Chi2 distribution as in the 'frequentist' case. Howver the SSR is not based only on a punt estimate but it is computed by the whole posterior distribution of parameters.
+This algorithm relies on the Chi2 distribution as in the 'frequentist' case. Howver 
+the SSR is not based only on a punt estimate but it is computed by the whole posterior 
+distribution of parameters.
 
 
 # Examples
+
 ```jldoctest
+
 x = [1,2,3,4,5]
 y = [1.01,1.95,3.05,3.97,5.1]
 ey = [0.05,0.1,0.11,0.17,0.2]
@@ -179,12 +219,19 @@ end
 
     RMS(datavec,modvec)
 
-Computes the [Root Mean Square value](https://en.wikipedia.org/wiki/Root_mean_square).
-'datavec' and 'modvec' are vectors formed by datapoints and model values to be compared with.
+Compute the [Root Mean Square value](https://en.wikipedia.org/wiki/Root_mean_square).
+
+
+# Arguments
+
+- `datavec` datapoints.
+- `modvec` model values.
 
 
 # Examples
+
 ```jldoctest
+
 RMS([1.1,2.2],[1.15,2.15])
 
 # output
@@ -202,12 +249,20 @@ end
 
     SSR(modvec,obsvec,errobsvec)
 
-Computes the [Sum of Squared Residuals](https://en.wikipedia.org/wiki/Residual_sum_of_squares).
-'modvec', 'obsvec' and 'errobsvec' are vectors with the model predictions, observed data and errors, respectively.
+Compute the [Sum of Squared Residuals](https://en.wikipedia.org/wiki/Residual_sum_of_squares).
+
+
+# Arguments
+
+- `modvec` model predictions.
+- `obsvec` observed data.
+- `errobsvec~ uncertainties. 
 
 
 # Examples
+
 ```jldoctest
+
 SSR([1.,2.,3.,4.],[1.1,1.9,3.05,3.8],[0.1,0.05,0.2,0.1])
 
 # output
@@ -225,12 +280,19 @@ end
 
     WeightedArithmeticMean(x,ex)
 
-Computes the [Weighted Arithmetic Mean](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean) of the input vector 'x'
-weitghted by its uncertainties 'ex'.
+Compute the [Weighted Arithmetic Mean](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean).
+
+
+# Arguments
+
+- `x` input vector
+- `ex` uncertainties.
 
 
 # Examples
+
 ```jldoctest
+
 x = [1.2,2.2,4.5,3,3.6]
 ex = [0.2,0.2,0.5,0.1,0.6]
 
