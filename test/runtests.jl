@@ -36,11 +36,11 @@ using Test
     x = [1,2,3,4,5]
     y = [1.01,1.95,3.05,3.97,5.1]
     ey = [0.05,0.1,0.11,0.17,0.2]
-    f(x;a=1.,b=0.) = a.*x.+b
+    f2(x;a=1.,b=0.) = a.*x.+b
     ch = DataFrame(a=[0.99,0.95,1.01,1.02,1.03], b=[0.,-0.01,0.01,0.02,-0.01])
     res = []
     for i in 1:nrow(ch)
-        push!(res,f(x;a=ch[i,:a],b=ch[i,:b]))
+        push!(res,f2(x;a=ch[i,:a],b=ch[i,:b]))
     end
     @test Lucy_Bayesian_p_value(res,y,ey,2) == 0.7200318895143041
     #
@@ -54,5 +54,11 @@ using Test
     wx = [1.2,2.2,4.5,3,3.6]
     wex = [0.2,0.2,0.5,0.1,0.6]
     @test WeightedArithmeticMean(wx,wex) == (2.634301913536499, 0.07986523020975032)
+    #
+    # GetACF
+    @test GetACF(wx,2)["ACF"] == [1.0, 0.04658385093167703, -0.25931677018633537]
+    #
+    # GetPACF
+    @test GetPACF(wx,2)["PACF"] == [ 1.0, 0.10253110253110313, -0.12812960235640872]
     #
 end

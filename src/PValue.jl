@@ -4,11 +4,14 @@ module PValue
 using DataFrames
 using Distributions
 using Statistics
+using StatsBase
 
 
 export BIC
 export Frequentist_p_value
 export Gelman_Bayesian_p_value
+export GetACF
+export GetPACF
 export Lucy_Bayesian_p_value
 export RMS
 export SSR
@@ -55,7 +58,7 @@ Compute the 'classic' frequentist [p-value](https://en.wikipedia.org/wiki/P-valu
 
 - `ssrv` SSR, the sum of squared residuals.
 - `ndata` number of datapoints.
-- `nvar` number of fit parameters. 
+- `nvar` number of fit parameters.
 - `ndof` number of [degrees of freedom](https://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics))
 (i.e. ``ndata-nvar``).
 
@@ -105,21 +108,21 @@ Compute a 'Bayesian [p-value](https://en.wikipedia.org/wiki/P-value)' following 
 
 ### Explanation
 
-`obsvec` and `errobsvec` are length-'m' vectors of datapoints and relative uncertainties. 
-`modvecs` is a vector computed by the posterior distribution of parameters (`n` chains), 
-e.g. by a MCMC, where each component is a vector of `m` values computed using the fit function 
-and each set of parmeters from the posterior distribution. Finally, `simvecs` is like `modevecs` 
+`obsvec` and `errobsvec` are length-'m' vectors of datapoints and relative uncertainties.
+`modvecs` is a vector computed by the posterior distribution of parameters (`n` chains),
+e.g. by a MCMC, where each component is a vector of `m` values computed using the fit function
+and each set of parmeters from the posterior distribution. Finally, `simvecs` is like `modevecs`
 with the addition of the predicted noise, i.e. these are simulated datapoints.
 
-The routinely essentially compares the SSR (or, in principle, any test statistics) of 
-each model based on the derived posterior distribution of parameters vs the data and 
+The routinely essentially compares the SSR (or, in principle, any test statistics) of
+each model based on the derived posterior distribution of parameters vs the data and
 to SSR computed by simulated data and again the posterior.
 
 
 # Examples
 
-A full example of application of the **Gelman_Bayesian_p_value** as well as the 
-**Lucy_Bayesian_p_value** and the **Frequentist_p_value** is reported in this 
+A full example of application of the **Gelman_Bayesian_p_value** as well as the
+**Lucy_Bayesian_p_value** and the **Frequentist_p_value** is reported in this
 Jupyter [notebook](https://github.com/stefanocovino/PValue.jl/tree/main/docs/BayesianFitTest.ipynb).
 
 
@@ -146,6 +149,67 @@ end
 
 
 
+"""
+
+    GetACF(data::Vector{Float64},lags::Integer;sigma=1.96)
+
+Compute the [AutoCorrelation Function[(https://en.wikipedia.org/wiki/Autocorrelation) for the given lags. It returns a dictionary with the ACF and the minimum and maximum uncertainties.
+
+# Arguments
+- `data` logarithm of the likelihood.
+- `lags` last lag to be computed.
+- `sigma` number of sigmas for the uncertainties.
+
+
+# Examples
+```jldoctest
+
+GetACF([1.2,2.5,3.5,4.3],2)["ACF"]
+
+# output
+
+3-element Vector{Float64}:
+  1.0
+  0.23928737773637632
+ -0.2945971122496507
+```
+"""
+function GetACF(data, lags; sigma=1.96)
+  cc = StatsBase.autocor(data,0:lags)
+  return Dict("ACF" => cc, "errACFmin" => -1/length(data)-sigma*sqrt(1/length(data)), "errACFmax" => -1/length(data)+sigma*sqrt(1/length(data)))
+end
+
+
+
+"""
+
+    GetPACF(data::Vector{Float64},lags::Integer;sigma=1.96)
+
+Compute the [Partial AutoCorrelation Function[(https://en.wikipedia.org/wiki/Partial_autocorrelation_function) for the given lags. It returns a dictionary with the PACF and the minimum and maximum uncertainties.
+
+# Arguments
+- `data` logarithm of the likelihood.
+- `lags` last lag to be computed.
+- `sigma` number of sigmas for the uncertainties.
+
+
+# Examples
+```jldoctest
+
+GetPACF([1.2,2.5,3.5,4.3],1)["PACF"]
+
+# output
+
+2-element Vector{Float64}:
+ 1.0
+ 0.7819548872180438
+```
+"""
+function GetPACF(data::Vector{Float64}, lags::Integer; sigma=1.96)
+  cc = StatsBase.pacf(data,0:lags)
+  return Dict("PACF" => cc, "errPACFmin" => -1/length(data)-sigma*sqrt(1/length(data)), "errPACFmax" => -1/length(data)+sigma*sqrt(1/length(data)))
+end
+
 
 
 """
@@ -166,14 +230,14 @@ Compute a 'Bayesian [p-value](https://en.wikipedia.org/wiki/P-value)' following 
 
 ### Explanation
 
-`obsvec` and `errobsvec` are length-`m` vectors of datapoints and relative uncertainties. 
-`modvecs` is a vector computed by the posterior distribution of parameters (`n` chains), 
-e.g. by a MCMC, where each component is a vector of `m` values computed using the fit 
-function and each set of parmeters from the posterior distribution. Finally, `nvars` is 
+`obsvec` and `errobsvec` are length-`m` vectors of datapoints and relative uncertainties.
+`modvecs` is a vector computed by the posterior distribution of parameters (`n` chains),
+e.g. by a MCMC, where each component is a vector of `m` values computed using the fit
+function and each set of parmeters from the posterior distribution. Finally, `nvars` is
 the number of parameters.
 
-This algorithm relies on the Chi2 distribution as in the 'frequentist' case. Howver 
-the SSR is not based only on a punt estimate but it is computed by the whole posterior 
+This algorithm relies on the Chi2 distribution as in the 'frequentist' case. Howver
+the SSR is not based only on a punt estimate but it is computed by the whole posterior
 distribution of parameters.
 
 
@@ -256,7 +320,7 @@ Compute the [Sum of Squared Residuals](https://en.wikipedia.org/wiki/Residual_su
 
 - `modvec` model predictions.
 - `obsvec` observed data.
-- `errobsvec~ uncertainties. 
+- `errobsvec~ uncertainties.
 
 
 # Examples
