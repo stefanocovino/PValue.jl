@@ -153,7 +153,7 @@ end
 
     GetACF(data::Vector{Float64},lags::Integer;sigma=1.96)
 
-Compute the [AutoCorrelation Function[(https://en.wikipedia.org/wiki/Autocorrelation) for the given lags. It returns a dictionary with the ACF and the minimum and maximum uncertainties.
+Compute the [AutoCorrelation Function[(https://en.wikipedia.org/wiki/Autocorrelation) for the given lags. It returns a dictionary with the ACF and the minimum and maximum uncertainties against a white noise hypothesis.
 
 # Arguments
 - `data` logarithm of the likelihood.
