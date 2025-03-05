@@ -1,7 +1,7 @@
 name = "PValue"
 uuid = "4aad55e6-3783-49d8-8c0b-540e9d18c8e0"
 authors = ["stefanocovino <stefano.covino@inaf.it> and contributors"]
-version = "1.0.1"
+version = "1.0.2"
 
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
@@ -16,7 +16,7 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 DataFrames = "1"
 Distributions = "0.25"
 Documenter = "1"
-StatsBase = "0.34.4"
+StatsBase = "0.33.0, 0.34.4"
 julia = "1"
 
 [extras]
