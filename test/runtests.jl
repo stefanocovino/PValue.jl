@@ -1,8 +1,12 @@
+using AbstractFFTs
 using DataFrames
 using Distributions
+using FFTW
+using LinearAlgebra
 using PValue
 using Random
 using Test
+
 
 @testset "PValue.jl" begin
     # BIC
@@ -60,5 +64,16 @@ using Test
     #
     # GetPACF
     @test isapprox(GetPACF(wx,2)["PACF"], [ 1.0, 0.10253110253110313, -0.12812960235640872], atol=1e-10)
+    #
+    @test Z2N([1.,0.5,0.25], [1.,2.,2.5,3.5,5.]) == [0.4, 0.4000000000000002, 0.537258300203048]
+    #
+    @test FourierPeriodogram([1.,2.,3.,4.],1.) == ([0.0, 0.25], [100.0, 8.000000000000002])
+    #
+    t = [1.1,2.3,3.2,4.5]
+    y = [1.,2.,0.5,0.3]
+    ey = 0.1 .* y
+    @test ACF_EK(t,y,ey,bins=2) == ([0.6817802730844681, 0.2530024508265458], [0.4472135954999579, 0.5773502691896257], -3.4:3.40000000005:3.4000000001)
+    #
+    @test GetCrossCorr([1.2,2.5,3.5,4.3],[1.5,2.9,3.0,4.1],2) == [ -0.1926156048478174, 0.1658715565267623, 0.9627857395579823, 0.15827215481804718, -0.15637230439086838 ]
     #
 end

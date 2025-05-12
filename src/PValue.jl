@@ -1,21 +1,117 @@
 module PValue
 
 
+using AbstractFFTs
 using DataFrames
 using Distributions
+using FFTW
+using LinearAlgebra
 using Statistics
 using StatsBase
 
 
+export ACF_EK
 export BIC
+export FourierPeriodogram
 export Frequentist_p_value
 export Gelman_Bayesian_p_value
 export GetACF
+export GetCrossCorr
 export GetPACF
 export Lucy_Bayesian_p_value
 export RMS
 export SSR
 export WeightedArithmeticMean
+export Z2N
+
+
+
+"""
+  ACF_EK(t::Vector{Float64},y::Vector{Float64},dy::Vector{Float64}; bins::Int=20)
+  
+Compute the auto-correlation function for data irregularly sampled, following the algorithm by [Edelson & Krolik (1988)](https://ui.adsabs.harvard.edu/abs/1988ApJ...333..646E/abstract). This a porting of the `python` [astroML version](https://github.com/astroML/astroML/tree/main/astroML/time_series).
+
+
+# Arguments
+- `t` is the vector of observing times.
+- `y` is the vector of fluxes.
+- `ey` is the vector of the uncertainties of the fluxes.
+
+
+
+Returns a tuple of three value: the ACF, the ACF uncertainties, and the bin limits.
+
+# Example
+```julia
+t = [1.1,2.3,3.2,4.5]
+y = [1.,2.,0.5,0.3]
+ey = 0.1 .* y
+
+ACF_EK(t,y,ey,bins=2)
+([0.6817802730844681, 0.2530024508265458], [0.4472135954999579, 0.5773502691896257], -3.4:3.40000000005:3.4000000001)
+
+```
+"""
+function ACF_EK(t::Vector{Float64},y::Vector{Float64},dy::Vector{Float64}; bins::Int=20)
+  #
+  if length(y) != length(t)
+      throw(ArgumentError("shapes of t and y must match"))
+  end
+  #
+  if ndims(t) != 1
+      throw(ArgumentError("t should be a 1-dimensional array"))
+  end
+  #
+  if length(dy) != length(y) && length(dy) != 1
+      throw(ArgumentError("shapes of y and dy must match or dy should be a single number"))
+  end
+  #
+  if length(y) != length(bins) && length(bins) != 1
+      throw(ArgumentError("shapes of y and bins must match or bins should be a single number"))
+  end
+  #
+  if length(dy) == 1
+      dy = dy .* ones(lengt(y))
+  end
+  # compute mean and standard deviation of y
+  w = 1 ./ (dy .* dy)
+
+  w = w / sum(w)
+
+  mu = dot(w,y)
+  sigma = std(y)
+
+  dy2 = reshape(dy,(1,length(dy)))
+
+  dt = (t .- reshape(t,(1,length(t))))'
+
+  a1 = (y .- mu) * reshape(y .- mu,(1,length(y)))
+  a2 = sqrt.((sigma.^2 .- dy.^2) * (sigma.^2 .- dy2.^2))
+
+  UDCF = a1 ./ a2
+
+  # determine binning
+  if length(bins) == 1
+      dt_min = minimum(dt)
+      dt_max = maximum(dt)
+      bins = range(start=dt_min,stop=dt_max+1e-10,length=bins+1)
+  end
+
+  ACF = zeros(length(bins)-1)
+  M = zeros(length(bins)-1)
+
+  for i in 1:(length(bins) - 1)
+      flag = (dt .>= bins[i]) .& (dt .< bins[i + 1])
+      M[i] = sum(flag)
+      ACF[i] = sum(UDCF[flag])
+  end
+
+  ACF = ACF ./ M
+
+  return ACF, sqrt.(2 ./ M), bins
+end
+
+
 
 
 """
@@ -43,6 +139,47 @@ BIC(56.,100,3)
 function BIC(lp::AbstractFloat,ndata::Integer,nvar::Integer)
     return -2*lp + nvar*log(ndata)
 end
+
+
+
+"""
+    FourierPeriodogram(signal,fs;zerofreq=true)
+
+Compute the discrete Fourier periodogram for the inpout signal.
+
+
+# Arguments
+
+- `signal` array of input data.
+- `fs` sampling in frequency of the input data (1/dt).
+- 'zerofreq' is true (false) to (not) include the zero frequency in the output.
+
+Outputs are two arrays: the frequencies and the powers.
+
+
+# Examples
+```jldoctest
+
+FourierPeriodogram([1.,2.,3.,4.],1.)
+
+# output
+
+([0.0, 0.25], [100.0, 8.000000000000002])
+```
+"""
+function FourierPeriodogram(signal,fs;zerofreq=true)
+    N = length(signal)
+    freqs = fftfreq(N,fs)
+    if zerofreq
+        positive = freqs .>= 0
+    else
+        positive = freqs .> 0
+    end
+    ft = fft(signal)
+    powers = abs.(ft).^2
+    return freqs[positive], powers[positive]
+end
+
 
 
 
@@ -88,6 +225,7 @@ function Frequentist_p_value(ssrv,ndof)
     cs = Chisq(ndof)
     return ccdf(cs,ssrv)
 end
+
 
 
 
@@ -156,7 +294,7 @@ end
 Compute the [AutoCorrelation Function[(https://en.wikipedia.org/wiki/Autocorrelation) for the given lags. It returns a dictionary with the ACF and the minimum and maximum uncertainties against a white noise hypothesis.
 
 # Arguments
-- `data` logarithm of the likelihood.
+- `data` is the vector of input data.
 - `lags` last lag to be computed.
 - `sigma` number of sigmas for the uncertainties.
 
@@ -183,12 +321,46 @@ end
 
 """
 
+    GetCrossCorr(x::Vector{Float64},y::Vector{Float64},lags::Integer)
+
+Compute the [crosscorrelation [(https://en.wikipedia.org/wiki/Cross-correlation) between the `x` and `y` datasets for the given lags. It returns the cross-correlation values.
+
+# Arguments
+- `x` is the first input vector.
+- `y` is the second input vector.
+- `lags` last lag to be computed.
+
+
+
+# Examples
+```julia
+
+GetCrossCorr([1.2,2.5,3.5,4.3],[1.5,2.9,3.0,4.1],2)
+
+# output
+
+5-element Vector{Float64}:
+ -0.1926156048478174
+  0.1658715565267623
+  0.9627857395579823
+  0.15827215481804718
+ -0.15637230439086838
+```
+"""
+function GetCrossCorr(x::Vector{Float64},y::Vector{Float64},lags::Integer)
+	cc = StatsBase.crosscor(x, y, -lags:lags; demean=true)
+	return cc
+end
+
+
+"""
+
     GetPACF(data::Vector{Float64},lags::Integer;sigma=1.96)
 
 Compute the [Partial AutoCorrelation Function[(https://en.wikipedia.org/wiki/Partial_autocorrelation_function) for the given lags. It returns a dictionary with the PACF and the minimum and maximum uncertainties.
 
 # Arguments
-- `data` logarithm of the likelihood.
+- `data` is the vector of input data.
 - `lags` last lag to be computed.
 - `sigma` number of sigmas for the uncertainties.
 
@@ -373,6 +545,55 @@ function WeightedArithmeticMean(x,ex)
     d = sum(w)
     return n/d, sqrt(1/d)
 end
+
+
+
+
+
+"""
+    Z2N(freqs, time)
+
+Compute the Rayleigh power spectrum of a time series in a given range of frequencies.
+
+# Arguments
+
+- `freqs` is an array with frequencies in units of 1/[time].
+- `time` is an array with the time series where to find a period.
+- `harm` is the number of harmonics to be used in the analysis.
+
+
+# Examples
+```jldoctest
+
+Z2N([1.,0.5,0.25], [1.,2.,2.5,3.5,5.])
+
+# output
+
+3-element Vector{Any}:
+ 0.4
+ 0.4000000000000002
+ 0.537258300203048
+```
+"""
+function Z2N(freqs, time; harm=1)
+    N = length(time)
+    Z2n = []
+    for ni in freqs
+        aux = 0
+        for k in 1:harm
+            Phi = mod.(ni .* time,1)
+            arg = k .* Phi*2.0*π
+            phicos = cos.(arg)
+            phisin = sin.(arg)
+            aux = aux .+ (sum(phicos)^2 + sum(phisin)^2)
+        end
+        push!(Z2n,(2.0/N)*aux)
+    end
+    return Z2n
+end
+
+
+
 
 
 end
