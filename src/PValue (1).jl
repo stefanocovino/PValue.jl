@@ -20,6 +20,7 @@ export GetCrossCorr
 export GetPACF
 export Lucy_Bayesian_p_value
 export RMS
+export SigmaClip
 export SSR
 export WeightedArithmeticMean
 export Z2N
@@ -477,6 +478,50 @@ RMS([1.1,2.2],[1.15,2.15])
 """
 function RMS(datavec,modvec)
     sqrt(sum((datavec-modvec).^2)/length(datavec))
+end
+
+
+
+"""
+    SigmaClip(x, ex=ones(size(x)); sigmacutlevel=2)
+
+Sigma-clipping filtering of an input array,
+
+# Arguments
+
+- `x` input array.
+- `ex` uncertainties.
+- `sigmacutlevel` sigma-clipping level.
+
+It performs a one-iteration sigma clipping and reports a mask to select the
+surviving elements in the input arrays or other related arrays.
+
+# Examples
+```jldoctest
+
+x = [4.,6.,8.,1.,3.,5.,20.]
+mask = SigmaClip(x)
+x[mask]
+
+# output
+
+6-element Vector{Float64}:
+ 4.0
+ 6.0
+ 8.0
+ 1.0
+ 3.0
+ 5.0
+```
+"""
+function SigmaClip(x, ex=ones(size(x)); sigmacutlevel=2)
+    w = pweights(1 ./ ex.^2)
+    m = mean(x,w)
+    s = std(x,w)
+    #println(m," ",s)
+    #
+    flt = (m-sigmacutlevel*s .<= x) .& (x .<= m+sigmacutlevel*s)
+    return flt
 end
 
 
