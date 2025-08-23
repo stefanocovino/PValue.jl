@@ -290,7 +290,7 @@ end
 
 """
 
-    GetACF(data::Vector{Float64},lags::Integer;sigma=1.96)
+    GetACF(data::Vector{Float64},lags::Integer;sigma=1.96,bartlett=false)
 
 Compute the [AutoCorrelation Function[(https://en.wikipedia.org/wiki/Autocorrelation) for the given lags. It returns a dictionary with the ACF and the minimum and maximum uncertainties against a white noise hypothesis.
 
@@ -298,6 +298,7 @@ Compute the [AutoCorrelation Function[(https://en.wikipedia.org/wiki/Autocorrela
 - `data` is the vector of input data.
 - `lags` last lag to be computed.
 - `sigma` number of sigmas for the uncertainties.
+- `bartlett`if a flag driving the error computation. If `true` Bartlett formula is applied.
 
 
 # Examples
@@ -313,9 +314,16 @@ GetACF([1.2,2.5,3.5,4.3],2)["ACF"]
  -0.2945971122496507
 ```
 """
-function GetACF(data, lags; sigma=1.96)
+function GetACF(data, lags; sigma=1.96, bartlett=false)
   cc = StatsBase.autocor(data,0:lags)
-  return Dict("ACF" => cc, "errACFmin" => -1/length(data)-sigma*sqrt(1/length(data)), "errACFmax" => -1/length(data)+sigma*sqrt(1/length(data)))
+  #
+  varcc = ones(Float64,length(cc)) / length(cc)
+  if bartlett
+    varcc[1] = 0
+    varcc[2] = 1.0 / length(cc)
+    varcc[3:end] .*= 1 .+ 2*cumsum(cc[2:end-1].^2)
+  end
+  return Dict("ACF" => cc, "errACFmin" => -1/length(data).-sigma*sqrt.(varcc), "errACFmax" => -1/length(data).+sigma*sqrt.(varcc))
 end
 
 
