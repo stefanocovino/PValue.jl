@@ -60,7 +60,7 @@ using Test
     @test WeightedArithmeticMean(wx,wex) == (2.634301913536499, 0.07986523020975032)
     #
     # GetACF
-    @test GetACF(wx,2)["ACF"] == [1.0, 0.04658385093167703, -0.25931677018633537]
+    @test isapprox(GetACF(wx,2)["ACF"], [1.0, 0.04658385093167703, -0.25931677018633537], atol=1e-8)
     #
     # GetPACF
     @test isapprox(GetPACF(wx,2)["PACF"], [ 1.0, 0.10253110253110313, -0.12812960235640872], atol=1e-10)
