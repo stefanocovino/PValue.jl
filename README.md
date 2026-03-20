@@ -4,7 +4,7 @@
 [![Build Status](https://github.com/stefanocovino/PValue.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/stefanocovino/PValue.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
 
-This is a simple package including a set of julia functions to compute useful statistical quantities, including `p-value's in a "frequentist" or "Bayesian" scenario.
+This is a simple package including a set of julia functions to compute useful statistical quantities, including *p-value*'s in a "frequentist" or "Bayesian" scenario.
 
 
 ## Installation
@@ -24,6 +24,8 @@ Pkg.add("PValue")
 will install this package.
 
 [Here](https://stefanocovino.github.io/PValue.jl/stable/)'s the documentation!
+
+
 
 
 Some of the package functionalities are also offered by the [HypothesisTests](https://github.com/JuliaStats/HypothesisTests.jl.git) package.
