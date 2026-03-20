@@ -20,6 +20,7 @@ export GetCrossCorr
 export GetPACF
 export Lucy_Bayesian_p_value
 export RMS
+export SchusterPeriodogram
 export SigmaClip
 export SSR
 export WeightedArithmeticMean
@@ -491,6 +492,31 @@ end
 
 
 """
+    SchusterPeriodogram(time::Vector{Float64}, flux::Vector{Float64}, freq::Vector{Float64})
+
+Computes a periodogram applying the textbook formula.
+
+# Arguments
+
+- `time` is the vector of the input time-series.
+- `flux` is the vector with the time-series values.
+- `freq` is the vector with the desired frequencies where to compute the power.
+
+This is not a very efficient algorithm to compute a periodogram, i.e. it is much less efficient
+than the fast Fourier transform, but it can be computed at any frequency one may choose for regularly
+or irregularly sampled time-series.
+
+"""
+function SchusterPeriodogram(time::Vector{Float64}, flux::Vector{Float64}, freq::Vector{Float64})
+    pwr = abs.(exp.(-2im .* π .* freq * time') * flux).^2
+    return pwr/length(time)
+end
+
+
+
+
+
+"""
     SigmaClip(x, ex=ones(size(x)); sigmacutlevel=2)
 
 Sigma-clipping filtering of an input array,
@@ -531,6 +557,9 @@ function SigmaClip(x, ex=ones(size(x)); sigmacutlevel=2)
     flt = (m-sigmacutlevel*s .<= x) .& (x .<= m+sigmacutlevel*s)
     return flt
 end
+
+
+
 
 
 

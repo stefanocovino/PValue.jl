@@ -80,4 +80,9 @@ using Test
     mask = SigmaClip(x)
     @test x[mask] == [4.,6.,8.,1.,3.,5.]
     #
+    time = [1.,3.,5.,8.]
+    flux = [0.1,0.3,0.1,0.4]
+    freq = [1.,3.]
+    @test SchusterPeriodogram(time, flux, freq) == [0.2025, 0.2025]
+    #
 end
