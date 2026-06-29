@@ -85,4 +85,7 @@ using Test
     freq = [1.,3.]
     @test SchusterPeriodogram(time, flux, freq) == [0.2025, 0.2025]
     #
+    rng = Xoshiro(123)
+    @test isapprox(BlockBootstrap(collect(1:9),randn(rng,9),ones(9)*0.01,rseed=1,block_length=3)[2], [0.8082879284649668,-1.1220725081141734,-1.1046361023292959,-0.4169926351649334,-1.1220725081141734,-1.1046361023292959,-0.4169926351649334,0.28758798062385577,-1.1046361023292959],rtol=1e-5)
+    #
 end

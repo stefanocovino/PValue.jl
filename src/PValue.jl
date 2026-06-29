@@ -6,12 +6,14 @@ using DataFrames
 using Distributions
 using FFTW
 using LinearAlgebra
+using Random
 using Statistics
 using StatsBase
 
 
 export ACF_EK
 export BIC
+export BlockBootstrap
 export FourierPeriodogram
 export Frequentist_p_value
 export Gelman_Bayesian_p_value
@@ -141,6 +143,79 @@ BIC(56.,100,3)
 function BIC(lp::AbstractFloat,ndata::Integer,nvar::Integer)
     return -2*lp + nvar*log(ndata)
 end
+
+
+
+
+"""
+
+    BlockBootstrap(t, fl, efl; block_length=10.0, rseed=nothing)
+
+    Implement a block boostrap algorithm for a time-seris formed by an index (t), data (fl) and uncertainties (efl).
+
+# Arguments
+- `t`  : Time-index of the input time-series
+- `fl` : Time-series data
+- `efl`: Time-series data uncertainties.
+
+
+```
+"""
+function BlockBootstrap(t, fl, efl; block_length=10.0, rseed=nothing)
+    # Set the random seed if provided
+    !isnothing(rseed) && Random.seed!(rseed)
+
+    N = length(t)
+    t_boot = zeros(Float64, N)
+    fl_boot = zeros(Float64, N)
+    efl_boot = zeros(Float64, N)
+
+    k = 1  # Julia is 1-indexed
+    last_time = 0.0
+
+    # Equivalent to finding max_idx:
+    # How many points (roughly) fit into a block_length from the end
+    max_idx = 2
+    for i in 2:N
+        max_idx = i
+        if t[end] - t[end - i + 1] > block_length
+            break
+        end
+    end
+
+    while k <= N
+        # Pick a random starting index
+        # rand(min:max) is inclusive on both ends
+        idx_start = rand(1:(N - max_idx))
+
+        idx_end = idx_start + 1
+        for j in (idx_start + 1):N
+            idx_end = j
+            # Check if block exceeds length or if we're filling the last spots in N
+            if t[idx_end] - t[idx_start] > block_length || k + (idx_end - idx_start) >= N
+                break
+            end
+        end
+
+        # Calculate the length of the slice to copy
+        len = idx_end - idx_start
+        range_target = k:(k + len - 1)
+        range_source = idx_start:(idx_end - 1)
+
+        # Assign values
+        t_boot[range_target] .= t[range_source] .- t[idx_start] .+ last_time
+        fl_boot[range_target] .= fl[range_source]
+        efl_boot[range_target] .= efl[range_source]
+
+        # Update tracking variables
+        last_time = (t[idx_end] - t[idx_start]) + last_time
+        k += len
+    end
+    return t_boot, fl_boot, efl_boot
+end
+
+
+
 
 
 
@@ -389,7 +464,7 @@ GetPACF([1.2,2.5,3.5,4.3],1)["PACF"]
 """
 function GetPACF(data::Vector{Float64}, lags::Integer; sigma=1.96)
   cc = StatsBase.pacf(data,0:lags)
-  return Dict("PACF" => cc, "errPACFmin" => -1/length(data)-sigma*sqrt(1/length(data)), "errPACFmax" => -1/length(data)+sigma*sqrt(1/length(data)))
+  return Dict("PACF" => cc, "errPACFmin" => ones(lags+1)*(-1/length(data)-sigma*sqrt(1/length(data))), "errPACFmax" => ones(lags+1)*(-1/length(data)+sigma*sqrt(1/length(data))))
 end
 
 
